@@ -45,14 +45,14 @@ copy %disk%\Windows\System32\Config\Software C:\Users\%USERNAME%\Desktop\RegFile
 copy %disk%\Windows\System32\Config\System C:\Users\%USERNAME%\Desktop\RegFiles\System
 copy %disk%\Windows\System32\Config\Default C:\Users\%USERNAME%\Desktop\RegFiles\Default
 
-for /D %%u in (%disk%\Users\*) do copy %disk%\Users\%%~nu\NTUSER.DAT C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_NTUSER.DAT
+for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_NTUSER\ & echo F | xcopy /h %disk%\Users\%%~nu\ntuser* C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_NTUSER\
 
 
 echo Done!
 echo.
 echo Copying shellbag files...
 mkdir C:\Users\%USERNAME%\Desktop\RegFiles\Shellbag
-for /D %%u in (%disk%\Users\*) do copy %disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\UsrClass.dat C:\Users\%USERNAME%\Desktop\RegFiles\Shellbag\%%~nu_usrClass.dat
+for /D %%u in (%disk%\Users\*) do echo F | xcopy /h %disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\UsrClass.dat C:\Users\%USERNAME%\Desktop\RegFiles\Shellbag\%%~nu_usrClass.dat
 
 
 echo Done!
@@ -78,7 +78,7 @@ echo Done!
 echo. 
 echo Copying SRUM files...
 mkdir C:\Users\%USERNAME%\Desktop\RegFiles\SRUM
-copy %disk%\Windows\System32\sru\SRUDB.dat C:\Users\%USERNAME%\Desktop\RegFiles\SRUM\SRUDB.dat
+echo F | xcopy /h %disk%\Windows\System32\sru\SRUDB.dat C:\Users\%USERNAME%\Desktop\RegFiles\SRUM\SRUDB.dat
 
 
 
@@ -119,7 +119,7 @@ echo.
 echo.
 echo.
 echo Copying Downloadcache...
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\WebCache\*.dat" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache
+for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache & echo F | xcopy /h "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\WebCache\*.dat" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache
 for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\Outlook" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache
 
 
