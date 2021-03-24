@@ -120,7 +120,7 @@ echo.
 echo.
 echo Copying Downloadcache...
 for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache & echo F | xcopy /h "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\WebCache\*.dat" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\Outlook" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache
+for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Outlook" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache
 
 
 echo Done!
