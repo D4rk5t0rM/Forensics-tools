@@ -134,6 +134,12 @@ echo.
 echo Copying Thumbcache...
 for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_Thumbcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\Explorer" .\RegFiles\%%~nu_Thumbcache
 
+echo Done!
+echo.
+echo Copying RBPcache...
+mkdir .\RDP
+for /D %%u in (%disk%\Users\*) do mkdir .\RDP\%%~nu_RDPcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Terminal Server Client\Cache" .\RegFiles\%%~nu_RDPcache
+# script is not working correctly yet. powershell -ep bypass ./extractRDP.ps1
 
 echo Done!
 echo.
@@ -152,11 +158,15 @@ echo Done!
 echo.
 echo.
 echo.
-echo +++++++++++++++++++++++++++++
-echo Cleaning up empty direcotries
-echo +++++++++++++++++++++++++++++
+echo ++++++++++++++++++++++++++++++++++++++++++++++++
+echo Cleaning up empty direcotries and unneeded files
+echo ++++++++++++++++++++++++++++++++++++++++++++++++
 for /d %%d in (.\RegFiles\*) do rd "%%d"
 for /d %%d in (.\Browser_Files\*) do rd "%%d"
+for %%d in (.\RDP\*) do rm "%%d.bin"
+for %%d in (.\RDP\*) do rm "%%d.bmc"
+for /d %%d in (.\RDP\*) do rd "%%d"
+
 
 
 echo Done!
