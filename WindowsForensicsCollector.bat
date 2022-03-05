@@ -36,6 +36,14 @@ echo Suspect's disk: %disk%
 echo.
 echo.
 
+:: ----- External Tools -----
+echo Running dfirt.ps1...  - https://github.com/mamun-sec/dfirt
+powershell -ep bypass Start-Process -WindowStyle hidden PowerShell -Argument .\.scripts\dfirt.ps1
+
+
+
+:: ----- End External Tools -----
+
 echo Copying hive files...
 mkdir .\RegFiles
 copy %disk%\Boot\BCD .\RegFiles\BCD
@@ -45,14 +53,14 @@ copy %disk%\Windows\System32\Config\Software .\RegFiles\Software
 copy %disk%\Windows\System32\Config\System .\RegFiles\System
 copy %disk%\Windows\System32\Config\Default .\RegFiles\Default
 
-for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_NTUSER\ & echo F | xcopy /h %disk%\Users\%%~nu\ntuser* .\RegFiles\%%~nu_NTUSER\
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_NTUSER\ & echo F | xcopy /h/E %disk%\Users\%%~nu\ntuser* .\RegFiles\%%~nu_NTUSER\
 
 
 echo Done!
 echo.
 echo Copying shellbag files...
 mkdir .\RegFiles\Shellbag
-for /D %%u in (%disk%\Users\*) do echo F | xcopy /h %disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\UsrClass.dat .\RegFiles\Shellbag\%%~nu_usrClass.dat
+for /D %%u in (%disk%\Users\*) do echo F | xcopy /h/E %disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\UsrClass.dat .\RegFiles\Shellbag\%%~nu_usrClass.dat
 
 
 echo Done!
@@ -108,7 +116,7 @@ echo -----------
 echo + Edge +
 echo -----------
 for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_EdgeESEdb & XCopy "%disk%\Users\%%~nu\AppData\Local\Packages\Microsoft.MicrosoftEdge*\AC\MicrosoftEdge\User\Default\DataStore\Data\nouser1\*\DBStore\" .\Browser_Files\%%~nu_EdgeESEdb /E/H/C/I/Q
-for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_EdgeCache & XCopy "%disk%\Users\%%~nu\AppData\Local\Packages\Microsoft.MicrosoftEdge*\AC\#!001\MicrosoftEdge\Cache\" .\Browser_Files\%%~nu_EdgeCache /E/H/C/I/Q
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_EdgeCache & XCopy "%disk%\Users\%%~nu\AppData\Local\Packages\Microsoft.MicrosoftEdge*\AC\::!001\MicrosoftEdge\Cache\" .\Browser_Files\%%~nu_EdgeCache /E/H/C/I/Q
 echo -----------
 echo + InternetExplorer +
 echo -----------
@@ -128,6 +136,14 @@ echo.
 echo Copying RDP cache...
 for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_RDPCache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Terminal Server Client" .\RegFiles\%%~nu_RDPCache
 
+echo.
+echo Copying RDPcache... - https://raw.githubusercontent.com/Viralmaniar/Remote-Desktop-Caching-/master/rdpcache.ps1
+echo script is not working correctly yet; 
+echo skipping...
+::mkdir .\RDP
+::for /D %%u in (%disk%\Users\*) do mkdir .\RDP\%%~nu_RDPcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Terminal Server Client\Cache" .\RegFiles\%%~nu_RDPcache
+::powershell -ep bypass Start-Process -WindowStyle hidden PowerShell -Argument .\.scrips\extractRDP.ps1
+
 
 echo Done!
 echo.
@@ -136,22 +152,34 @@ for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_Thumbcache & XCopy "%di
 
 echo Done!
 echo.
-echo Copying RBPcache...
-mkdir .\RDP
-for /D %%u in (%disk%\Users\*) do mkdir .\RDP\%%~nu_RDPcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Terminal Server Client\Cache" .\RegFiles\%%~nu_RDPcache
-# script is not working correctly yet. powershell -ep bypass ./extractRDP.ps1
-
-echo Done!
-echo.
-echo.
-echo.
-
-echo.
 echo.
 echo.
 echo Copying Downloadcache...
 for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_Webcache & echo F | xcopy /h "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\WebCache\*.dat" .\RegFiles\%%~nu_Webcache
 for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_Mailcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Outlook" .\RegFiles\%%~nu_Mailcache
+
+
+timeout /t 10
+TYPE report.txt
+
+echo ==============================================================
+
+echo Done!
+echo.
+echo.
+echo.
+echo ++++++++++++++++++++++++++++++++++
+echo Listing known malicious file paths
+echo ++++++++++++++++++++++++++++++++++
+mkdir .\knownMaliciousPaths
+xcopy /s %disk%\Windows\TEMP .\knownMaliciousPaths\winTEMP\
+xcopy /s %disk%\Windows\temp .\knownMaliciousPaths\winTemp\
+xcopy /s %disk%\TEMP .\knownMaliciousPaths\TEMP\
+xcopy /s %disk%\.TEMP .\knownMaliciousPaths\hiddenTEMP\
+xcopy /s %disk%\temp .\knownMaliciousPaths\temp\
+xcopy /s %disk%\Temp .\knownMaliciousPaths\Temp\
+xcopy /s %disk%\.temp .\knownMaliciousPaths\hiddenTemp\
+
 
 
 echo Done!
@@ -163,9 +191,13 @@ echo Cleaning up empty direcotries and unneeded files
 echo ++++++++++++++++++++++++++++++++++++++++++++++++
 for /d %%d in (.\RegFiles\*) do rd "%%d"
 for /d %%d in (.\Browser_Files\*) do rd "%%d"
-for %%d in (.\RDP\*) do rm "%%d.bin"
-for %%d in (.\RDP\*) do rm "%%d.bmc"
+for %%d in (.\RDP\*) do del "%%d.bin"
+for %%d in (.\RDP\*) do del "%%d.bmc"
 for /d %%d in (.\RDP\*) do rd "%%d"
+del report.txt
+for /d %%d in (.\knownMaliciousPaths\*) do rd "%%d"
+rd .\knownMaliciousPaths
+
 
 
 
