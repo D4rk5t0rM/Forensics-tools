@@ -37,49 +37,48 @@ echo.
 echo.
 
 echo Copying hive files...
-mkdir C:\Users\%USERNAME%\Desktop\RegFiles
-copy %disk%\Boot\BCD C:\Users\%USERNAME%\Desktop\RegFiles\BCD
-copy %disk%\Windows\System32\Config\SAM C:\Users\%USERNAME%\Desktop\RegFiles\SAM
-copy %disk%\Windows\System32\Config\SECURITY C:\Users\%USERNAME%\Desktop\RegFiles\SECURITY
-copy %disk%\Windows\System32\Config\Software C:\Users\%USERNAME%\Desktop\RegFiles\Software
-copy %disk%\Windows\System32\Config\System C:\Users\%USERNAME%\Desktop\RegFiles\System
-copy %disk%\Windows\System32\Config\Default C:\Users\%USERNAME%\Desktop\RegFiles\Default
+mkdir .\RegFiles
+copy %disk%\Boot\BCD .\RegFiles\BCD
+copy %disk%\Windows\System32\Config\SAM .\RegFiles\SAM
+copy %disk%\Windows\System32\Config\SECURITY .\RegFiles\SECURITY
+copy %disk%\Windows\System32\Config\Software .\RegFiles\Software
+copy %disk%\Windows\System32\Config\System .\RegFiles\System
+copy %disk%\Windows\System32\Config\Default .\RegFiles\Default
 
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_NTUSER\ & echo F | xcopy /h %disk%\Users\%%~nu\ntuser* C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_NTUSER\
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_NTUSER\ & echo F | xcopy /h %disk%\Users\%%~nu\ntuser* .\RegFiles\%%~nu_NTUSER\
 
 
 echo Done!
 echo.
 echo Copying shellbag files...
-mkdir C:\Users\%USERNAME%\Desktop\RegFiles\Shellbag
-for /D %%u in (%disk%\Users\*) do echo F | xcopy /h %disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\UsrClass.dat C:\Users\%USERNAME%\Desktop\RegFiles\Shellbag\%%~nu_usrClass.dat
+mkdir .\RegFiles\Shellbag
+for /D %%u in (%disk%\Users\*) do echo F | xcopy /h %disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\UsrClass.dat .\RegFiles\Shellbag\%%~nu_usrClass.dat
 
 
 echo Done!
 echo.
 echo Copying LNK files...
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_LNK & XCopy %disk%\Users\%%~nu\AppData\Roaming\Microsoft\Windows\Recent C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_LNK\ 
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_LNK & XCopy %disk%\Users\%%~nu\AppData\Roaming\Microsoft\Windows\Recent .\RegFiles\%%~nu_LNK\ 
 
 
 echo Done!
 echo.
 echo Copying JumpLists...
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_JumpLists & XCopy %disk%\Users\%%~nu\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_JumpLists
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_JumpLists & XCopy %disk%\Users\%%~nu\AppData\Roaming\Microsoft\Windows\Recent\AutomaticDestinations .\RegFiles\%%~nu_JumpLists
 
 
 echo Done!
 echo.
 echo Copying Prefetch files...
-mkdir C:\Users\%USERNAME%\Desktop\RegFiles\Prefetch
-xcopy %disk%\Windows\Prefetch C:\Users\%USERNAME%\Desktop\RegFiles\Prefetch
+mkdir .\RegFiles\Prefetch
+xcopy %disk%\Windows\Prefetch .\RegFiles\Prefetch
 
 
 echo Done!
 echo. 
 echo Copying SRUM files...
-mkdir C:\Users\%USERNAME%\Desktop\RegFiles\SRUM
-echo F | xcopy /h %disk%\Windows\System32\sru\SRUDB.dat C:\Users\%USERNAME%\Desktop\RegFiles\SRUM\SRUDB.dat
-
+mkdir .\RegFiles\SRUM
+echo F | xcopy /h %disk%\Windows\System32\sru\SRUDB.dat .\RegFiles\SRUM\SRUDB.dat
 
 
 echo Done!
@@ -90,24 +89,50 @@ echo Still To do
 echo -------------
 
 
+echo Done!
+echo.
+echo Copying Browser files...
+echo ================================
+mkdir .\Browser_Files
+echo -----------
+echo + Firefox +
+echo -----------
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_FirefoxRoaming & XCopy %disk%\Users\%%~nu\AppData\Roaming\Mozilla\Firefox\Profiles\ .\Browser_Files\%%~nu_FirefoxRoaming /E/H/C/I/Q
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_FirefoxLocal & XCopy %disk%\Users\%%~nu\AppData\Local\Mozilla\Firefox\Profiles\ .\Browser_Files\%%~nu_FirefoxLocal /E/H/C/I/Q
+echo -----------
+echo + Chrome +
+echo -----------
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_ChromeDefault & XCopy "%disk%\Users\%%~nu\AppData\Local\Google\Chrome\User Data\Default" .\Browser_Files\%%~nu_ChromeDefault /E/H/C/I/Q
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_ChromeDefaultData & XCopy "%disk%\Users\%%~nu\AppData\Local\Google\Chrome\User Data\ChromeDefaultData" .\Browser_Files\%%~nu_ChromeDefaultData /E/H/C/I/Q
+echo -----------
+echo + Edge +
+echo -----------
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_EdgeESEdb & XCopy "%disk%\Users\%%~nu\AppData\Local\Packages\Microsoft.MicrosoftEdge*\AC\MicrosoftEdge\User\Default\DataStore\Data\nouser1\*\DBStore\" .\Browser_Files\%%~nu_EdgeESEdb /E/H/C/I/Q
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_EdgeCache & XCopy "%disk%\Users\%%~nu\AppData\Local\Packages\Microsoft.MicrosoftEdge*\AC\#!001\MicrosoftEdge\Cache\" .\Browser_Files\%%~nu_EdgeCache /E/H/C/I/Q
+echo -----------
+echo + InternetExplorer +
+echo -----------
+for /D %%u in (%disk%\Users\*) do mkdir .\Browser_Files\%%~nu_InternetExplorer & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\WebCache" .\Browser_Files\%%~nu_InternetExplorer /E/H/C/I/Q
+echo ================================
+
 
 echo Done!
 echo.
 echo Copying Event Logs...
-mkdir C:\Users\%USERNAME%\Desktop\RegFiles\EventLogs
-xcopy %disk%\Windows\System32\winevt\Logs C:\Users\%USERNAME%\Desktop\RegFiles\EventLogs
+mkdir .\RegFiles\EventLogs
+xcopy %disk%\Windows\System32\winevt\Logs .\RegFiles\EventLogs
 
 
 echo Done!
 echo.
 echo Copying RDP cache...
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_RDPCache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Terminal Server Client" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_RDPCache
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_RDPCache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Terminal Server Client" .\RegFiles\%%~nu_RDPCache
 
 
 echo Done!
 echo.
 echo Copying Thumbcache...
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Thumbcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\Explorer" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Thumbcache
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_Thumbcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\Explorer" .\RegFiles\%%~nu_Thumbcache
 
 
 echo Done!
@@ -119,8 +144,8 @@ echo.
 echo.
 echo.
 echo Copying Downloadcache...
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache & echo F | xcopy /h "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\WebCache\*.dat" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Webcache
-for /D %%u in (%disk%\Users\*) do mkdir C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Outlook" C:\Users\%USERNAME%\Desktop\RegFiles\%%~nu_Mailcache
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_Webcache & echo F | xcopy /h "%disk%\Users\%%~nu\AppData\Local\Microsoft\Windows\WebCache\*.dat" .\RegFiles\%%~nu_Webcache
+for /D %%u in (%disk%\Users\*) do mkdir .\RegFiles\%%~nu_Mailcache & XCopy "%disk%\Users\%%~nu\AppData\Local\Microsoft\Outlook" .\RegFiles\%%~nu_Mailcache
 
 
 echo Done!
@@ -130,7 +155,8 @@ echo.
 echo +++++++++++++++++++++++++++++
 echo Cleaning up empty direcotries
 echo +++++++++++++++++++++++++++++
-for /d %%d in (C:\Users\%USERNAME%\Desktop\RegFiles\*) do rd "%%d"
+for /d %%d in (.\RegFiles\*) do rd "%%d"
+for /d %%d in (.\Browser_Files\*) do rd "%%d"
 
 
 echo Done!
