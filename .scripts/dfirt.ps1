@@ -211,12 +211,6 @@ Get-Content $CurrentPath\TEMP.txt | ForEach-Object {
 }
 
 
-
-
-
-
-
-
 ####################################################################
 # Check Network Related Running Services
 ####################################################################
@@ -271,53 +265,6 @@ if ($EventListF -match '[0-9]') {
 } else {
     Write-Host -ForegroundColor Green "[+]  No suspicious Event ID found"
     Add-Content -Path $CurrentPath\report.txt -Value "`r`nSuspicious Event ID found  : No"
-  }
-
-####################################################################
-# Collect Non Default Program File's folders
-####################################################################
-Write-Host -ForegroundColor Yellow "[+]  Collecting non default folders in Program File"
-$DefaultPFiles = 'Common Files', 'Internet Explorer', 'Windows Defender Advanced Threat Protection', 'Microsoft Update Health Tools', 'ModifiableWindowsApps', 'Windows Defender', 'Windows Mail', 'Windows Media Player', 'Windows Multimedia Platform', 'Windows NT', 'Windows Photo Viewer', 'Windows Portable Devices', 'Windows Security', 'WindowsPowerShell', 'Uninstall Information', 'WindowsApps'
-$NonDefaultDirs = @()
-$PFiles = Get-ChildItem 'C:\Program Files'
-$a = $PFiles | ? { $DefaultPFiles -notcontains $_ }
-$a.Name > $CurrentPath\TEMP1.txt
-Get-Content -Path $CurrentPath\TEMP1.txt | ForEach-Object {
-  if ($_ -match '\w') {
-    $NonDefaultDirs += $_
-  }
-}
-$i = 1
-if ($NonDefaultDirs.length -gt 0) {
-    Write-Host -ForegroundColor Red "[+]  Found Such Folder!"
-    if ($NonDefaultDirs.length -gt 10) {
-      if ($i -lt 11) {
-        $i++
-        Add-Content -Path $CurrentPath\report.txt -Value "`r`nFolder In Program Files    : More than 10 folders found in Program Files directory,`r`n                             which might be for third party programs.`r`n                             Here is the list of 10 folders-"
-        $NonDefaultDirs | ForEach-Object {
-          Add-Content -Path $CurrentPath\report.txt -Value "`r`n                             $_"
-        }
-      }
-    } elseif ($NonDefaultDirs.length -eq 10) {
-        if ($i -lt 11) {
-          $i++
-          Add-Content -Path $CurrentPath\report.txt -Value "`r`nFolder In Program Files    : 10 folders found in Program Files directory,`r`n                             which might be for third party programs.`r`n                             Here is the list-"
-          $NonDefaultDirs | ForEach-Object {
-            Add-Content -Path $CurrentPath\report.txt -Value "`r`n                             $_"
-          }
-        }
-      } else {
-          if ($i -lt 11) {
-          $i++
-          Add-Content -Path $CurrentPath\report.txt -Value "`r`nFolder In Program Files    : Less than 10 folders found in Program Files directory,`r`n                             which might be for third party programs.`r`n                             Here is the list-"
-          $NonDefaultDirs | ForEach-Object {
-            Add-Content -Path $CurrentPath\report.txt -Value "`r`n                             $_"
-          }
-        }
-      }
-} else {
-    Write-Host -ForegroundColor Green "[+]  Not Found Such Folder!"
-    Add-Content -Path $CurrentPath\report.txt -Value "`r`nFolder In Program Files    : Searched in Program Files directory for third party programs.`r`n                             Nothing found!"
   }
 
 ####################################################################

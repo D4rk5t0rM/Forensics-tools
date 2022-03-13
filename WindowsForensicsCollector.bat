@@ -180,6 +180,27 @@ xcopy /s %disk%\temp .\knownMaliciousPaths\temp\
 xcopy /s %disk%\Temp .\knownMaliciousPaths\Temp\
 xcopy /s %disk%\.temp .\knownMaliciousPaths\hiddenTemp\
 
+echo Done!
+echo.
+echo.
+echo.
+echo ++++++++++++++++++++++
+echo Listing Appdata files:
+echo ++++++++++++++++++++++
+for /D %%u in (%disk%\Users\*) do dir %disk%\Users\%%~nu\AppData\Roaming
+for /D %%u in (%disk%\Users\*) do dir %disk%\Users\%%~nu\AppData\Local
+for /D %%u in (%disk%\Users\*) do dir %disk%\Users\%%~nu\AppData\LocalLow
+
+echo Done!
+echo.
+echo.
+echo.
+echo +++++++++++++++++++++++++++++
+echo Listing Program files & Data:
+echo +++++++++++++++++++++++++++++
+dir "%disk%\Program Files"
+dir "%disk%\Program Files (x86)"
+dir "%disk%\ProgramData"
 
 
 echo Done!
