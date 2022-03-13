@@ -268,57 +268,6 @@ if ($EventListF -match '[0-9]') {
   }
 
 ####################################################################
-# Check recently opened files
-####################################################################
-Write-Host -ForegroundColor Yellow "[+]  Checking recently used files"
-$a = 1
-$UsrProfile = $ENV:USERPROFILE
-if (Test-Path -Path "$UsrProfile\AppData\Roaming\Microsoft\Windows\Recent") {
-  cd "$UsrProfile\AppData\Roaming\Microsoft\Windows\Recent"
-  $RecentFiles = (Get-ChildItem .\ -file).FullName
-  $RFLength = $RecentFiles.length
-  if ($RFLength -gt 0) {
-    if ($RFLength -gt 10) {
-      Write-Host -ForegroundColor Green "[+]  Found Recent Files!"
-      Add-Content -Path $CurrentPath\report.txt -Value "`r`nRecent Files               : Found more than 10 files in $UsrProfile\AppData\Roaming\Microsoft\Windows\Recent`r`n                             Here is the list of 10 files-"
-      $RecentFiles | ForEach-Object {
-        if ($a -lt 11) {
-          $LinkFileName = Get-ChildItem -Path $_ -Name
-          Add-Content -Path $CurrentPath\report.txt -Value "`r`n                             $LinkFileName"
-          $a++
-        }
-      }
-    } elseif ($RFLength -eq 10) {
-        Write-Host -ForegroundColor Green "[+]  Found Recent Files!"
-        Add-Content -Path $CurrentPath\report.txt -Value "`r`nRecent Files               : Found more than 10 files in $UsrProfile\AppData\Roaming\Microsoft\Windows\Recent`r`n                             Here is the list of 10 files-"
-        $RecentFiles | ForEach-Object {
-          if ($a -lt 11) {
-            $LinkFileName = Get-ChildItem -Path $_ -Name
-            Add-Content -Path $CurrentPath\report.txt -Value "`r`n                             $LinkFileName"
-            $a++
-          }
-        }
-      } else {
-         Write-Host -ForegroundColor Green "[+]  Found Recent Files!"
-         Add-Content -Path $CurrentPath\report.txt -Value "`r`nRecent Files               : Found less than 10 files in $UsrProfile\AppData\Roaming\Microsoft\Windows\Recent`r`n                             Here is the list-"
-         $RecentFiles | ForEach-Object {
-          if ($a -lt 11) {
-            $LinkFileName = Get-ChildItem -Path $_ -Name
-            Add-Content -Path $CurrentPath\report.txt -Value "`r`n                             $LinkFileName"
-            $a++
-          }
-         }
-        }
-  } else {
-      Write-Host -ForegroundColor Red "[+]  Found Nothing!"
-      Add-Content -Path $CurrentPath\report.txt -Value "`r`nRecent Files               : Nothing found"
-    }
-  cd $CurrentPath
-}
-Remove-Item $CurrentPath\TEMP.txt 2>&1>$null
-Remove-Item $CurrentPath\TEMP1.txt 2>&1>$null
-
-####################################################################
 # Check directly opened files directly from Windows Explorer
 ####################################################################
 Write-Host -ForegroundColor Yellow "[+]  Checking files, opened directly from Windows Explorer"
