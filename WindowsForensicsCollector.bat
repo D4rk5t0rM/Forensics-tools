@@ -178,7 +178,7 @@ xcopy /s %disk%\TEMP .\knownMaliciousPaths\TEMP\
 xcopy /s %disk%\.TEMP .\knownMaliciousPaths\hiddenTEMP\
 xcopy /s %disk%\temp .\knownMaliciousPaths\temp\
 xcopy /s %disk%\Temp .\knownMaliciousPaths\Temp\
-xcopy /s %disk%\.temp .\knownMaliciousPaths\hiddenTemp\
+echo a | xcopy /s %disk%\.temp .\knownMaliciousPaths\hiddenTemp\
 
 echo Done!
 echo.
@@ -196,11 +196,21 @@ echo.
 echo.
 echo.
 echo +++++++++++++++++++++++++++++
-echo Listing Program files & Data:
+echo Listing Program files and Data:
 echo +++++++++++++++++++++++++++++
-dir "%disk%\Program Files"
-dir "%disk%\Program Files (x86)"
-dir "%disk%\ProgramData"
+dir "%disk%\Program Files" /a
+dir "%disk%\Program Files (x86)" /a
+dir "%disk%\ProgramData" /a
+
+echo Done!
+echo.
+echo.
+echo.
+echo +++++++++++++++++++++++++++++
+echo Listing Volume shadow copies:
+echo +++++++++++++++++++++++++++++
+vssadmin list volumes
+vssadmin list shadows
 
 
 echo Done!
@@ -218,8 +228,6 @@ for /d %%d in (.\RDP\*) do rd "%%d"
 del report.txt
 for /d %%d in (.\knownMaliciousPaths\*) do rd "%%d"
 rd .\knownMaliciousPaths
-
-
 
 
 echo Done!
